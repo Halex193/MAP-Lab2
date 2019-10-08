@@ -1,8 +1,10 @@
 package repository;
 
 import model.GeometricShape;
+import repository.exceptions.EntityAlreadyExistsException;
 import repository.exceptions.EntityNotFoundException;
 import repository.exceptions.OutOfSpaceException;
+
 import java.util.Arrays;
 
 public class MemoryRepository implements Repository
@@ -13,10 +15,16 @@ public class MemoryRepository implements Repository
 
     @Override
     public void add(GeometricShape geometricShape)
+            throws OutOfSpaceException, EntityAlreadyExistsException
     {
         if (numberOfShapes == MAXIMUM_SIZE)
         {
             throw new OutOfSpaceException();
+        }
+        for (int i = 0; i < numberOfShapes; i++)
+        {
+            if (storedShapes[i].equals(geometricShape))
+                throw new EntityAlreadyExistsException();
         }
         storedShapes[numberOfShapes++] = geometricShape;
     }
@@ -30,6 +38,7 @@ public class MemoryRepository implements Repository
             {
                 if (numberOfShapes - i >= 0)
                     System.arraycopy(storedShapes, i + 1, storedShapes, i, numberOfShapes - i);
+                numberOfShapes--;
                 return true;
             }
         }
@@ -37,7 +46,7 @@ public class MemoryRepository implements Repository
     }
 
     @Override
-    public void update(GeometricShape geometricShape)
+    public void update(GeometricShape geometricShape) throws EntityNotFoundException
     {
         for (int i = 0; i < numberOfShapes; i++)
         {
@@ -53,6 +62,6 @@ public class MemoryRepository implements Repository
     @Override
     public GeometricShape[] getGeometricShapes()
     {
-        return Arrays.copyOf(storedShapes, MAXIMUM_SIZE);
+        return Arrays.copyOf(storedShapes, numberOfShapes);
     }
 }

@@ -1,12 +1,15 @@
 package model;
 
-public class Cube extends GeometricShape
+import java.util.Objects;
+
+import static java.lang.Math.pow;
+
+public class Cube implements GeometricShape
 {
     private double sideLength;
 
-    public Cube(int volume, double sideLength)
+    public Cube(double sideLength)
     {
-        super(volume);
         this.sideLength = sideLength;
     }
 
@@ -18,5 +21,26 @@ public class Cube extends GeometricShape
     public double getSideLength()
     {
         return sideLength;
+    }
+
+    @Override
+    public double getVolume()
+    {
+        return pow(sideLength, 3);
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (!(o instanceof Cube)) return false;
+        Cube cube = (Cube) o;
+        return Double.compare(cube.getSideLength(), getSideLength()) == 0;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(getSideLength());
     }
 }
