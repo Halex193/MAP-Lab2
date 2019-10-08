@@ -1,0 +1,5 @@
+package repository.exceptions;
+
+public class RepositoryException extends RuntimeException
+{
+}
